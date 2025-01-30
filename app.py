@@ -61,6 +61,6 @@ if menu =="Days Left Until...":
 elif menu =="Numbers To Words":
     st.markdown("Number")
     number = st.number_input("Number to translate", min_value=0.0, max_value=None, value=123456789.10, step=None, format=None, key=None, help=None, on_change=None, args=None, kwargs=None,  placeholder=None, disabled=False, label_visibility="visible")
-    number_word=num2words(number,to='currency').replace('euro,','Rand, and').title().replace('And','and')
+    number_word=num2words(number,to='currency').replace('euro,','Rand, and').title().replace(',','').upper()
     st.write("Words:")
     st.write(f"{number_word}")
