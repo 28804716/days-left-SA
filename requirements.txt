@@ -2,3 +2,4 @@ streamlit
 datetime 
 numpy 
 num2words
+st_keyup
