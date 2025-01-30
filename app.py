@@ -38,7 +38,7 @@ for year in range(startdate.year,stopdate.year+1):
             if ph_date.weekday() != 5:
                 n_ph=n_ph+1
                 public_holidays_active.append([ph_date,ph[2]])
-
+st.markdown(f"# *{diff-n_ph}!*")
 st.markdown(f"There are **{diff-n_ph}** business days between **{startdate.strftime('%A %d %B %Y')}** and **{stopdate.strftime('%A %d %B %Y')}**.")
 st.write(f"({n_ph} public holidays)")
 
