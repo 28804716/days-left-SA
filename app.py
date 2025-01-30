@@ -12,6 +12,11 @@ import datetime as dt
 import numpy as np
 from num2words import num2words
 
+from st_keyup import st_keyup
+
+def n_to_r(n):
+    return (num2words(n,to='currency').replace('euro,','Rand,').title()).upper()
+
 st.set_page_config(page_title="Small Utilities.", layout="wide")
 
 st.sidebar.title("Navigation")
@@ -58,9 +63,23 @@ if menu =="Days Left Until...":
     with st.expander("Public Holidays (South Africa)", expanded=False,icon=None):
         for ph in public_holidays_active:
             st.markdown(f"{ph[0].strftime('%Y/%m/%d')} : **{ph[1]}**")
+            
+            
 elif menu =="Numbers To Words":
-    st.markdown("Number")
-    number = st.number_input("Number to translate", min_value=0.0, max_value=None, value=123456789.10, step=None, format=None, key=None, help=None, on_change=None, args=None, kwargs=None,  placeholder=None, disabled=False, label_visibility="visible")
-    number_word=num2words(number,to='currency').replace('euro,','Rand, and').title().replace(',','').replace('-',' ').upper()
-    st.write("Words:")
-    st.write(f"{number_word}")
+    
+    def write_n_to_r():
+        st.write("Words:")
+        s=(st.session_state['num_box']).replace('r','').replace('R','').replace(' ','')
+        try:
+            w=n_to_r(s)
+        except:
+            if s==None or s == '':
+                w="Please Enter a number"
+            else:
+                w="Invalid Input"
+        st.markdown(f"### {w}")
+        
+    
+    st.markdown("Number:")
+    
+    s = st_keyup("Number to translate", value=None,type="number",  key="num_box",  on_change=write_n_to_r,debounce=300, args=None, kwargs=None,  placeholder=None, disabled=False, label_visibility="visible")
