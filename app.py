@@ -135,31 +135,30 @@ elif menu =="Pro rata":
     proratadf['Share in Percentage']=proratadf['Share in Rands']/proratadf['Share in Rands'].sum()*100.0
     
     with pie_chart_col:
-        
-        st.header("Pie Chart")
-        if total_option=="Calculate Total":
-            if ss.start_df['Share in Rands'].sum()>0.01:
-                with st.container(border=True):
-                    st.pyplot(ss.start_df.plot.pie(y='Share in Rands', figsize=(5, 5)).figure)
-            else:
-                st.write("Could not plot values")
-        else:
-            unaccounted_for = total_field-float(ss.start_df['Share in Rands'].sum())
-            
-            if unaccounted_for >= 0.0:
-            
-                df2=ss.start_df
-                df2.loc['UNACCOUNTED FOR']=[unaccounted_for,0.0]
-                df2['Share in Percentage']=df2['Share in Rands']/df2['Share in Rands'].sum()*100.0
+        with st.container(border=True):
+            st.header("Pie Chart")
+            if total_option=="Calculate Total":
                 if ss.start_df['Share in Rands'].sum()>0.01:
-                    with st.container(border=True):
-                        st.pyplot(df2.plot.pie(y='Share in Rands', figsize=(5, 5)).figure)
+                    st.pyplot(ss.start_df.plot.pie(y='Share in Rands', figsize=(5, 5)).figure)
                 else:
                     st.write("Could not plot values")
             else:
-                st.write("Please input a total that is equal to or greater than the sum of the columns")
-
-            
+                unaccounted_for = total_field-float(ss.start_df['Share in Rands'].sum())
+                
+                if unaccounted_for >= 0.0:
+                
+                    df2=ss.start_df
+                    df2.loc['UNACCOUNTED FOR']=[unaccounted_for,0.0]
+                    df2['Share in Percentage']=df2['Share in Rands']/df2['Share in Rands'].sum()*100.0
+                    if ss.start_df['Share in Rands'].sum()>0.01:
+                        
+                        st.pyplot(df2.plot.pie(y='Share in Rands', figsize=(5, 5)).figure)
+                    else:
+                        st.write("Could not plot values")
+                else:
+                    st.write("Please input a total that is equal to or greater than the sum of the columns")
+    
+                
 
     
 
