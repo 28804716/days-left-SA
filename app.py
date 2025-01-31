@@ -1,4 +1,3 @@
-
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
@@ -8,21 +7,25 @@ Created on Thu Jan 30 08:47:29 2025
 """
 
 import streamlit as st
+ss=st.session_state
+
+
 import datetime as dt
 import numpy as np
 from num2words import num2words
+import pandas as pd
 
 from st_keyup import st_keyup
 
 def n_to_r(n):
-    return (num2words(n,to='currency').replace('euro,','Rand,').title()).upper()
+    return (num2words(n,to='currency').replace('euro,','Rand,').title()).upper().replace('-',' ')
 
 st.set_page_config(page_title="Small Utilities.", layout="wide")
 
 st.sidebar.title("Navigation")
 menu = st.sidebar.radio(
     "Go to:",
-    ["Days Left Until...", "Numbers To Words", "Other"],
+    ["Days Left Until...", "Numbers To Words", "Pro rata","Other"],
 )
 
 public_holidays = [[1,1,"New Year’s Day"],
@@ -38,7 +41,11 @@ public_holidays = [[1,1,"New Year’s Day"],
 [25,12,"Christmas Day"],
 [26,12,"Day of Goodwill"]]
 
-
+proratadf=pd.DataFrame(columns=['Company Name', 'Share in Rands', 'Share in Percentage'])
+proratadf.set_index('Company Name', inplace=True)
+proratadf.loc[f"Company {1}"] = [1.0,0.0]
+proratadf.loc[f"Company {2}"] = [2.0,0.0]
+proratadf.loc[f"Company {3}"] = [3.0,0.0]
 if menu =="Days Left Until...":
 
     startdate = st.date_input("Start Date", value="today", min_value=None, max_value=None, key=None, help=None, on_change=None, args=None, kwargs=None, format="YYYY/MM/DD", disabled=False, label_visibility="visible")
@@ -83,3 +90,78 @@ elif menu =="Numbers To Words":
     st.markdown("Number:")
     
     s = st_keyup("Number to translate", value=None,type="number",  key="num_box",  on_change=write_n_to_r,debounce=300, args=None, kwargs=None,  placeholder=None, disabled=False, label_visibility="visible")
+    
+elif menu =="Pro rata":
+    
+    st.header("Pro rata calculations")
+
+    
+    
+    
+    
+    def update_df(proratadf):
+        proratadf['Share in Percentage']=proratadf['Share in Rands']/proratadf['Share in Rands'].sum()*100.0
+        
+    sum_total=0.0
+    total_option=st.radio("Total",["Calculate Total","Specify Total"])
+    data_col, pie_chart_col = st.columns(spec=[2,1])
+    
+    with data_col:
+        if 'start_df' not in ss:
+            ss.start_df = proratadf
+        
+        
+
+        edited_df = st.data_editor(ss.start_df, num_rows='dynamic',column_config={
+                                                                        "Company Name": st.column_config.TextColumn(
+                                                                            width="medium",
+                                                                        ),
+                                                                        "Share in Percentage":  st.column_config.NumberColumn(
+                                                                            format=" %.2f %%",width="medium"
+                                                                        ),
+                                                                        "Share in Rands":  st.column_config.NumberColumn(
+                                                                            format="%.2f",width="medium",
+                                                                        )
+                                                                    })
+
+        if not ss.start_df.equals(edited_df):
+            ss.start_df = edited_df
+            ss.start_df['Share in Percentage']= ss.start_df['Share in Rands']/ss.start_df['Share in Rands'].sum()*100.0
+            st.rerun()
+        
+        sum_total=ss.start_df['Share in Rands'].sum()
+        total_field=st.number_input("Total",value=sum_total,placeholder=sum_total,disabled=(total_option=="Calculate Total"))
+    
+    proratadf['Share in Percentage']=proratadf['Share in Rands']/proratadf['Share in Rands'].sum()*100.0
+    
+    with pie_chart_col:
+        
+        st.header("Pie Chart")
+        if total_option=="Calculate Total":
+            if ss.start_df['Share in Rands'].sum()>0.01:
+                st.pyplot(ss.start_df.plot.pie(y='Share in Rands', figsize=(5, 5)).figure)
+            else:
+                st.write("Could not plot values")
+        else:
+            unaccounted_for = total_field-float(ss.start_df['Share in Rands'].sum())
+            
+            if unaccounted_for >= 0.0:
+            
+                df2=ss.start_df
+                df2.loc['UNACCOUNTED FOR']=[unaccounted_for,0.0]
+                df2['Share in Percentage']=df2['Share in Rands']/df2['Share in Rands'].sum()*100.0
+                if ss.start_df['Share in Rands'].sum()>0.01:
+                    st.pyplot(df2.plot.pie(y='Share in Rands', figsize=(5, 5)).figure)
+                else:
+                    st.write("Could not plot values")
+            else:
+                st.write("Please input a total that is equal to or greater than the sum of the columns")
+
+            
+
+    
+
+
+            
+            
+        
