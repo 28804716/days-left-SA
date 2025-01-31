@@ -93,7 +93,7 @@ elif menu =="Numbers To Words":
     
 elif menu =="Pro rata":
     
-    st.header("Pro rata calculations")
+    
 
     
     
@@ -103,10 +103,12 @@ elif menu =="Pro rata":
         proratadf['Share in Percentage']=proratadf['Share in Rands']/proratadf['Share in Rands'].sum()*100.0
         
     sum_total=0.0
-    total_option=st.radio("Total",["Calculate Total","Specify Total"])
+    
     data_col, pie_chart_col = st.columns(spec=[2,1])
     
     with data_col:
+        st.header("Pro rata calculations")
+        total_option=st.radio("Total",["Calculate Total","Specify Total"])
         if 'start_df' not in ss:
             ss.start_df = proratadf
         
