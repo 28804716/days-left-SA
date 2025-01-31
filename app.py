@@ -179,7 +179,7 @@ elif menu =="Pro rata":
 elif menu=="Other":         
 
     st.markdown(f"## Sonnet {n_sonnet+1}")
-    st.text(p.replace('\\n','\n'))
+    st.text(p.replace('\\n','\n')+"\n - William Shakespeare")
 
     
 
