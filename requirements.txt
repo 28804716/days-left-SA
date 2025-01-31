@@ -3,3 +3,4 @@ datetime
 numpy 
 num2words
 streamlit-keyup
+pandas
