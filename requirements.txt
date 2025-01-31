@@ -4,3 +4,4 @@ numpy
 num2words
 streamlit-keyup
 pandas
+matplotlib
