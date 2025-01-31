@@ -15,7 +15,15 @@ import numpy as np
 from num2words import num2words
 import pandas as pd
 
+import random
 from st_keyup import st_keyup
+
+def to_integer(dt_time):
+    return 10000*dt_time.year + 100*dt_time.month + dt_time.day
+
+random.seed(to_integer(dt.date.today()))
+
+n_sonnet=random.randint(0, 153)
 
 def n_to_r(n):
     return (num2words(n,to='currency').replace('euro,','Rand,').title()).upper().replace('-',' ')
