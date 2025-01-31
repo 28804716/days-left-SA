@@ -139,7 +139,8 @@ elif menu =="Pro rata":
         st.header("Pie Chart")
         if total_option=="Calculate Total":
             if ss.start_df['Share in Rands'].sum()>0.01:
-                st.pyplot(ss.start_df.plot.pie(y='Share in Rands', figsize=(5, 5)).figure)
+                with st.container(border=True):
+                    st.pyplot(ss.start_df.plot.pie(y='Share in Rands', figsize=(5, 5)).figure)
             else:
                 st.write("Could not plot values")
         else:
@@ -151,7 +152,8 @@ elif menu =="Pro rata":
                 df2.loc['UNACCOUNTED FOR']=[unaccounted_for,0.0]
                 df2['Share in Percentage']=df2['Share in Rands']/df2['Share in Rands'].sum()*100.0
                 if ss.start_df['Share in Rands'].sum()>0.01:
-                    st.pyplot(df2.plot.pie(y='Share in Rands', figsize=(5, 5)).figure)
+                    with st.container(border=True):
+                        st.pyplot(df2.plot.pie(y='Share in Rands', figsize=(5, 5)).figure)
                 else:
                     st.write("Could not plot values")
             else:
