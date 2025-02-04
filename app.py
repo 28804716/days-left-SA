@@ -29,10 +29,9 @@ p=""
 
 with open('sonnets.txt', 'r') as file:
     # Read each line in the file
-    for i,line in enumerate(file):
-        if i == n_sonnet:
-            p=line
-            break
+    lines=file.readlines()
+    p=lines[130]
+
 
 def n_to_r(n):
     return (num2words(n,to='currency').replace('euro,','Rand,').title()).upper().replace('-',' ')
@@ -179,8 +178,7 @@ elif menu =="Pro rata":
 elif menu=="Other":         
 
     st.markdown(f"## Sonnet {n_sonnet+1}")
-    st.text(p.replace('\\n','\n')+"\n - William Shakespeare")
-
+    st.write(p.replace('\\n','\\\n')+f"\n \- [William Shakespeare](https://www.folger.edu/explore/shakespeares-works/shakespeares-sonnets/read/{n_sonnet+1}/)")
     
 
 
